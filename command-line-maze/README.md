@@ -12,3 +12,6 @@ ls -> list contents of a directory
 ls -la -> list all contents including hidden files
 
 open [file] -> open file
+
+Sources:
+Mostly Wikipedia articles or my own knowledge from various books and classes
