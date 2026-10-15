@@ -69,4 +69,15 @@ def add_book():
     return new_book
 
 
+enter_book = console.input("Would you like to add a book to the table? (y/n): ")
 
+if enter_book == "y":
+    while True:
+        new_entry = add_book()
+        is_correct = console.input("Is this information correct? (y/n): ")
+        if is_correct == "y":
+            favorite_books.append(new_entry)
+            another_one = console.input("Do you want to add another book? (y/n): ")
+            if another_one == "n":
+                break
+        
