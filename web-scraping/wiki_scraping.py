@@ -58,3 +58,26 @@ def scrape_name():
                     })  
 """
 
+def scrape_pokemon( __, source_url):
+    pokemon = []
+    if __ is None:
+        return pokemon
+
+    table = __.find("table", class_:__)
+    if table is None:
+        return pokemon
+
+    pokemon_name = table.find_all("tr")
+    for item in pokemon_name:
+        link = item.find("a", href=True)
+        if link is None:
+            continue
+
+        pokemon.append({
+            "pokemon_name": link.get_text(" ", strip=True),
+#            "character_type": character_type,
+            "source_url": source_url,
+            "pokemon_url": f"{BASE_URL}{link['href']}",
+        })
+
+    return pokemon
