@@ -1,6 +1,7 @@
 import csv
 import time
 import requests
+import beautifulsoup4
 
 from bs4 import BeautifulSoup
 from rich.console import console
@@ -13,5 +14,10 @@ response = requests.get("YOUR_URL_HERE", headers=HEADERS, timeout=10)
 print(response.status_code)
 print(response.text[:300])
 
+BASE_URL = "https://bulbapedia.bulbagarden.net/"
+KANTO_REGION_URL = f"{BASE_URL}/wiki/Kanto" 
+UNOVA_REGION_URL = f"{BASE_URL}/wiki/Unova" 
 
+REQUEST_DELAY = 1.0
+RESULTS_OUTPUT = "pokemon_region_numbers.csv"
 
