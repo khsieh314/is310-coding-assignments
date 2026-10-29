@@ -10,8 +10,8 @@ response = requests.get("https://bulbapedia.bulbagarden.net", headers=HEADERS, t
 from bs4 import BeautifulSoup
 soup = BeautifulSoup(response.text, 'html.parser')
 
-print(response.status_code)
-print(response.text[:300])
+#print(response.status_code)
+#print(response.text[:300])
 
 BASE_URL = "https://bulbapedia.bulbagarden.net"
 KANTO_REGION_URL = f"{BASE_URL}/wiki/List_of_Pokémon_by_Kanto_Pokédex_number" 
@@ -37,47 +37,69 @@ def fetch_soup(url):
 
     return BeautifulSoup(response.text, "html.parser")
 
+soup = fetch_soup(KANTO_REGION_URL)
+#print(soup.prettify())
+tables = soup.find_all("table")
+#print(tables)
+for table in tables:
+    element = table.find_previous_sibling()
+    if element and element.name == "h4":
+        #print(element)
+        #print(table)
+        for row in table.find_all("tr"):
+            cells = row.find_all("td")
+            #print(cells)
+            if len(cells) >= 5: 
+                pokemon_name = cells[2].get_text()
+                print(pokemon_name)
+            
+    #print(element)
+
+
 
 #what I want this to do is to scrape the pokemon from the table as well as the corresponding
-#type I want to store both the name and the type together as well as count up the totla of each type
+#type I want to store both the name and the type together as well as count up the total of each type
 
-def scrape_name():
-    pokemon = []
-    table = soup.find('table', class_=__)
+# def scrape_name():
+#     pokemon = []
+#     table = soup.find('table', class_=__)
 
-    for row in table.tbody.find_all('tr'):
-        columns = row.find_all('td')
-        if columns:
-            name = columns[3].text.strip()
-            type = columns[4].text.strip()  
-"""
-    pokemon.append({
-        "pokemon":
-        "pokemon_url":
-        "type":
-                    })  
-"""
+#     for row in table.tbody.find_all('tr'):
+#         columns = row.find_all('td')
+#         if columns:
+#             name = columns[3].text.strip()
+#             type = columns[4].text.strip()  
+# """
+#     pokemon.append({
+#         "pokemon": name
+#         "pokemon_url":
+#         "type": type
+#                     })  
+# """
 
-def scrape_pokemon( __, source_url):
-    pokemon = []
-    if __ is None:
-        return pokemon
+# def scrape_pokemon( __, source_url):
+#     pokemon = []
+#     if __ is None:
+#         return pokemon
 
-    table = __.find("table", class_:__)
-    if table is None:
-        return pokemon
+#     table = __.find("table", class_:__)
+#     if table is None:
+#         return pokemon
 
-    pokemon_name = table.find_all("tr")
-    for item in pokemon_name:
-        link = item.find("a", href=True)
-        if link is None:
-            continue
+#     pokemon_name = table.find_all("tr")
+#     for item in pokemon_name:
+#         link = item.find("a", href=True)
+#         if link is None:
+#             continue
 
-        pokemon.append({
-            "pokemon_name": link.get_text(" ", strip=True),
-#            "character_type": character_type,
-            "source_url": source_url,
-            "pokemon_url": f"{BASE_URL}{link['href']}",
-        })
+#         pokemon.append({
+#             "pokemon_name": link.get_text(" ", strip=True),
+# #            "character_type": character_type,
+#             "source_url": source_url,
+#             "pokemon_url": f"{BASE_URL}{link['href']}",
+#         })
 
-    return pokemon
+#     return pokemon
+
+
+
