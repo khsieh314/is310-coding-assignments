@@ -17,7 +17,7 @@ BASE_URL = "https://bulbapedia.bulbagarden.net"
 KANTO_REGION_URL = f"{BASE_URL}/wiki/List_of_Pokémon_by_Kanto_Pokédex_number" 
 UNOVA_REGION_URL = f"{BASE_URL}/wiki/List_of_Pokémon_by_Unova_Pokédex_number_in_Pokémon_Black_and_White" 
 
-REQUEST_DELAY = 1.0
+REQUEST_DELAY = 5.0
 RESULTS_OUTPUT = "pokemon_region_numbers.csv"
 
 console = Console()
@@ -37,43 +37,24 @@ def fetch_soup(url):
 
     return BeautifulSoup(response.text, "html.parser")
 
-def scrape_pokemon (___, source_url):
+
+#what I want this to do is to scrape the pokemon from the table as well as the corresponding
+#type I want to store both the name and the type together as well as count up the totla of each type
+
+def scrape_name():
     pokemon = []
-    if ___, is None:
-        return pokemon
+    table = soup.find('table', class_=__)
 
-    pokemon_section = ___.find(id="mw-content-text")
-    if pokemon_section is None:
-        return pokemon
-
-    pokemon_items = pokemon_section.find_all("td")
-    for pokemon in pokemon_items:
-        link = pokemon.find("a", href=True)
-        if link is None:
-            continue
-
-        pokemon.append({
-            "Pokemon": link.get_text(" ", strip=True),
-            "source_url": source_url,
-            "Pokemon_url": f"{BASE_URL}{link['href']}",
-        })
-
-    return pokemon
-
-def get_internal_links(content):
-    if content is None:
-        return []
-
-    links = []
-    for link in content.find_all("a", href=True):
-        href = link["href"]
-        if href.startswith("/wiki/") and "#" not in href:
-            links.append(href)
-
-    return links
-
-
-
-console.print(scrape_pokemon(___, KANTO_REGION_URL))
-
+    for row in table.tbody.find_all('tr'):
+        columns = row.find_all('td')
+        if columns:
+            name = columns[3].text.strip()
+            type = columns[4].text.strip()  
+"""
+    pokemon.append({
+        "pokemon":
+        "pokemon_url":
+        "type":
+                    })  
+"""
 
