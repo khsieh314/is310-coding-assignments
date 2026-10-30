@@ -4,6 +4,7 @@ import requests
 import rich
 from rich.console import Console
 from rich.table import Table
+from collections import Counter
 
 HEADERS = {"User-Agent": "is310-course-scraper/1.0 (student project; katieh9@illinois.edu)"}
 response = requests.get("https://bulbapedia.bulbagarden.net", headers=HEADERS, timeout=10)
@@ -41,6 +42,10 @@ soup = fetch_soup(KANTO_REGION_URL)
 #print(soup.prettify())
 tables = soup.find_all("table")
 #print(tables)
+
+pokemon_name_list = []
+pokemon_type_list = []
+
 for table in tables:
     element = table.find_previous_sibling()
     if element and element.name == "h4":
@@ -51,9 +56,38 @@ for table in tables:
             #print(cells)
             if len(cells) >= 5: 
                 pokemon_name = cells[2].get_text()
-                print(pokemon_name)
-            
+                pokemon_name_list.append(pokemon_name)
+                pokemon_type = cells[3].get_text()
+                pokemon_type_list.append(pokemon_type)
+                #print(pokemon_name)
+                #print(pokemon_type)
     #print(element)
+
+#print(pokemon_name_list)
+print(pokemon_type_list)
+
+collected_data = dict(zip(pokemon_name_list, pokemon_type_list))
+#print(collected_data)
+#print(collected_data.items())
+#cleaned_collection = collected_data.items()
+
+def pokemon_table(pokemon_list):
+    table = Table(title="Pokemon Data", style="dark_green")
+    table.add_column("Pokemon Name", justify="center")
+    table.add_column("Pokemon Type", justify="center")
+
+    for p in pokemon_list:
+        table.add_row(str(p["Pokemon Name"]), str(p["Pokemon Type"]))
+
+    console.print(table)
+
+#pokemon_table(collected_data)
+
+type_count = Counter(pokemon_type_list)
+print(type_count)
+
+
+
 
 
 
