@@ -38,58 +38,102 @@ def fetch_soup(url):
 
     return BeautifulSoup(response.text, "html.parser")
 
-soup = fetch_soup(KANTO_REGION_URL)
-#print(soup.prettify())
-tables = soup.find_all("table")
-#print(tables)
+def get_pokemon_list(url):
+    soup = fetch_soup(url)
+    #print(soup.prettify())
+    tables = soup.find_all("table")
+    #print(tables)
+    pokemon_table_list = []
+    pokemon_type_list = []
 
-pokemon_name_list = []
-pokemon_type_list = []
+    for table in tables:
+        element = table.find_previous_sibling()
+        if element and element.name in {"h4", "h3"}:
+            element_text = element.get_text()
+            table_items = []
+            #print(element)
+            #print(table)
+            for row in table.find_all("tr"):
+                cells = row.find_all("td")
+                #print(cells)
+                if len(cells) >= 5: 
+                    pokemon_name = cells[2].get_text()
+                    #pokemon_name_list.append(pokemon_name)
+                    pokemon_type = cells[3].get_text()
+                    pokemon_type_list.append(pokemon_type.strip())
+                    pokemon_row = {"pokemon_name": pokemon_name, "pokemon_type": pokemon_type}
+                    table_items.append(pokemon_row)
+                    #print(pokemon_name)
+                    #print(pokemon_type)
+            if len(table_items) > 0:
+                pokemon_table_data = {"header": element_text, "table_items": table_items}
+                pokemon_table_list.append(pokemon_table_data)
+    return pokemon_table_list, pokemon_type_list
 
-for table in tables:
-    element = table.find_previous_sibling()
-    if element and element.name == "h4":
-        #print(element)
-        #print(table)
-        for row in table.find_all("tr"):
-            cells = row.find_all("td")
-            #print(cells)
-            if len(cells) >= 5: 
-                pokemon_name = cells[2].get_text()
-                pokemon_name_list.append(pokemon_name)
-                pokemon_type = cells[3].get_text()
-                pokemon_type_list.append(pokemon_type)
-                #print(pokemon_name)
-                #print(pokemon_type)
-    #print(element)
+kanto_pokemon, kanto_pokemon_types = get_pokemon_list(KANTO_REGION_URL)
+unova_pokemon, unova_pokemon_types = get_pokemon_list(UNOVA_REGION_URL)
+
+def print_pokemon_types(kanto_pokemon_types, unova_pokemon_types):
+    kanto_type_count = Counter(kanto_pokemon_types)
+    unova_type_count = Counter(unova_pokemon_types)
+    type_totals = kanto_type_count + unova_type_count
+
+    with open("pokemon_counts.csv", "w", newline= "") as newfile:
+        writer = csv.writer(newfile)
+        writer.writerow(["Type", "Kanto Region", "Unova Region"])
+
+        table = Table(title="Pokemon Type Comparison")
+        table.add_column("Type")
+        table.add_column("Kanto Region")
+        table.add_column("Unova Region")
+
+        # 1. Look at everything in List A
+        for p_type in kanto_type_count:
+            count_a = kanto_type_count[p_type]
+            count_b = unova_type_count.get(p_type, 0)  # Use 0 if it's not in List B
+            table.add_row(p_type, str(count_a), str(count_b))
+            writer.writerow([p_type, str(count_a), str(count_b)])
+
+        # 2. Look at everything in List B (but SKIP things we already counted in List A)
+        for p_type in unova_type_count:
+            if p_type not in kanto_type_count:
+                count_a = 0                     # Since it wasn't in List A
+                count_b = unova_type_count[p_type]
+                table.add_row(p_type, str(count_a), str(count_b))
+                writer.writerow([p_type, str(count_a), str(count_b)])
+  
+        console.print(table)
+
+print_pokemon_types(kanto_pokemon_types, unova_pokemon_types)
+
+def print_pokemon_table(pokemon_list):
+    for ptable in pokemon_list:
+        table = Table(title = ptable["header"] , style="dark_green")
+        table.add_column("Pokemon Name", justify="center")
+        table.add_column("Pokemon Type", justify="center")
+        for p in ptable["table_items"]:
+            table.add_row((p["pokemon_name"]), (p["pokemon_type"]))
+        console.print(table)
+
+
+
+#print_pokemon_table(kanto_pokemon)
+#print_pokemon_table(unova_pokemon)
 
 #print(pokemon_name_list)
-print(pokemon_type_list)
+#print(pokemon_type_list)
+#pokemon_name_dict = {"Name": pokemon_name_list}
+#print(pokemon_name_dict)
 
-collected_data = dict(zip(pokemon_name_list, pokemon_type_list))
+#collected_data = dict(zip(pokemon_name_list, pokemon_type_list))
 #print(collected_data)
 #print(collected_data.items())
 #cleaned_collection = collected_data.items()
 
-def pokemon_table(pokemon_list):
-    table = Table(title="Pokemon Data", style="dark_green")
-    table.add_column("Pokemon Name", justify="center")
-    table.add_column("Pokemon Type", justify="center")
-
-    for p in pokemon_list:
-        table.add_row(str(p["Pokemon Name"]), str(p["Pokemon Type"]))
-
-    console.print(table)
-
 #pokemon_table(collected_data)
 
-type_count = Counter(pokemon_type_list)
-print(type_count)
-
-
-
-
-
+#type_count = Counter(pokemon_type_list)
+#print(type_count)
 
 #what I want this to do is to scrape the pokemon from the table as well as the corresponding
 #type I want to store both the name and the type together as well as count up the total of each type
