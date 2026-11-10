@@ -1,11 +1,3 @@
 ## Reflections
-What did each require of you? A key? An account? An application explaining your purpose? A descriptive User-Agent? Nothing at all? What does that tell you about who each API expects to be talking to?
-
-Both of these sources did not require an API key. They were open for all users. We had to use a semi-descriptive user agent just to announce who we were an a way to contact us. I think in the Wiki case they are expectinga lot of scrapers and do not care about getting all of the hoops.
-
-What are the rate limits, and what do they imply about the scale of use the designers anticipated?
-How is the data shaped? Did you get clean structured JSON, or HTML you had to parse? Was it easy to get one thing and hard to get many, or the reverse? What questions does the structure make easy, and which does it quietly make hard?
-
-Who runs it, and how is it funded? A nonprofit foundation, a national government, a museum, a company, one volunteer developer? What happens to your research if it shuts down or starts charging?
-
-What’s missing? Every collection reflects choices about what was worth digitizing, cataloguing, or writing about. Whose culture is well represented in each of these datasets, and whose isn’t?
+I wanted to query these two sources to see what they returned in terms of Claude Monet. Wikipedia truned in a lot more biographical infomration while the MET truned in examples of his art. I specifically queried for those currently on display. 
+Both of these sources did not require an API key. They were open for all users. We had to use a semi-descriptive user agent just to announce who we were an a way to contact us. I think in the Wiki case they are expectinga lot of scrapers and do not care about getting all of the hoops. There are rate limits on both of the reuqests. I think this is to prevent it from being used or quried too much by a bot or some other entity. Wikipedia is a non profit that is being run by the wikimedia foundation and the MET is being run by the museum. There is the possibility that they start to change, even on teh MET website they slowly shifted their endpoint for search specific items. This could affect how the code runs so it's important to make sure that all your links are up to date. I think its safe to say a vast amount of culture is represented on the wikipedia pages, however, since I was only on the English page it's possible that most of the queries are english centered and I would have gotten something else on one of their other language pages. The MET is focused on culturally important art so I think its safe to say art both restircts adn enables looking into that particular cultural resource.

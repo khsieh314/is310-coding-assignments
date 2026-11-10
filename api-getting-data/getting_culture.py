@@ -15,6 +15,7 @@ wiki_params = {
     "action": "query",
     "list": "search",
     "srsearch": "Claude Monet",
+    "prop": "categories|images|info",
     "format": "json"
 }
 
@@ -22,7 +23,10 @@ wiki_response = requests.get(WIKI_API_URL, params=wiki_params, headers=HEADERS, 
 if wiki_response.status_code != 200:
     raise RuntimeError(f"WIKI API request failed: {wiki_response.status_code}")
 wiki_data = wiki_response.json()
-print(json.dumps(wiki_data))
+#print(json.dumps(wiki_data))
+print(wiki_data["query"]["pages"].values())
+"""for page in wiki_data:
+"""
 
 with open("wiki_data.json", "w", encoding="utf-8") as file:
     json.dump(wiki_data, file)
@@ -42,10 +46,11 @@ if met_response.status_code != 200:
     raise RuntimeError(f"MET API request failed: {met_response.status_code}")
 #print(met_response.text)
 met_data = met_response.json()
-print(json.dumps(met_data))
+#print(json.dumps(met_data, indent=4))
 
 with open("met_data.json", "w", encoding="utf-8") as file:
     json.dump(met_data, file)
+
 
 object_id = met_data.get("objectIDs")
 print(object_id)
@@ -68,8 +73,7 @@ for oid in object_id:
         raise RuntimeError(f"OBJECT from MET API request failed: {object_response.status_code}")
     #print(met_response.text)
     object_data = object_response.json()
-    print(json.dumps(object_data))
+    #print(json.dumps(object_data, indent=4))
+
     with open("object_data.json", "w", encoding="utf-8") as file:
         json.dump(object_data, file)
-
-
