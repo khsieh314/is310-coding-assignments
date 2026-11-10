@@ -1,6 +1,5 @@
 import time
-
-import apikey
+import json
 import requests
 from bs4 import BeautifulSoup
 from rich.console import Console
@@ -12,32 +11,32 @@ HEADERS = {
 }
 
 WIKI_API_URL = "https://en.wikipedia.org/w/api.php"
-
 wiki_params = {
     "action": "query",
     "list": "search",
-    "srsearch": "Claude%20Monet",
+    "srsearch": "Claude Monet",
     "format": "json"
 }
 
-response = requests.get(WIKI_API_URL, params=wiki_params, headers=HEADERS, timeout=15)
-if response.status_code != 200:
-    raise RuntimeError(f"WIKI API request failed: {response.status_code}")
-data = response.json()
+wiki_response = requests.get(WIKI_API_URL, params=wiki_params, headers=HEADERS, timeout=15)
+if wiki_response.status_code != 200:
+    raise RuntimeError(f"WIKI API request failed: {wiki_response.status_code}")
+wiki_data = wiki_response.json()
+print(json.dumps(wiki_data))
 
 
 
 MET_API_URL = "https://collectionapi.metmuseum.org/public/collection/v1.1/search"
-
 met_params = {
-    "action": "query",
-    "list": "search",
-    "srsearch": "Claude%20Monet",
-    "format": "json"
+    "q": "Claude Monet",
+    "title": "true",
+    "meduim": "paintings",
+    "hasImages": "true"
 }
 
-response = requests.get(MET_API_URL, params=met_params, headers=HEADERS, timeout=15)
-if response.status_code != 200:
-    raise RuntimeError(f"MET API request failed: {response.status_code}")
-data = response.json()
+met_response = requests.get(MET_API_URL, params=met_params, headers=HEADERS, timeout=15)
+if met_response.status_code != 200:
+    raise RuntimeError(f"MET API request failed: {met_response.status_code}")
+met_data = met_response.json()
+print(json.dumps(met_data))
 
