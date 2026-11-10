@@ -31,18 +31,45 @@ with open("wiki_data.json", "w", encoding="utf-8") as file:
 
 MET_API_URL = "https://collectionapi.metmuseum.org/public/collection/v1.1/search"
 met_params = {
-    "q": "Claude Monet",
-    "title": "true",
-    "meduim": "paintings",
-    "hasImages": "true"
+    "q": "claude monet",
+    "isHighlight": "true",
+    "hasImages": "true",
+    "limit": 15
 }
 
 met_response = requests.get(MET_API_URL, params=met_params, headers=HEADERS, timeout=15)
 if met_response.status_code != 200:
     raise RuntimeError(f"MET API request failed: {met_response.status_code}")
+#print(met_response.text)
 met_data = met_response.json()
 print(json.dumps(met_data))
 
 with open("met_data.json", "w", encoding="utf-8") as file:
     json.dump(met_data, file)
+
+object_id = met_data.get("objectIDs")
+print(object_id)
+
+OBJECT_MET_URL = "https://collectionapi.metmuseum.org/public/collection/v1/objects/"
+
+#object_response = requests.get(OBJECT_MET_URL + "459144", headers=HEADERS, timeout=15)
+#if met_response.status_code != 200:
+#    raise RuntimeError(f"OBJECT from MET API request failed: {object_response.status_code}")
+#print(met_response.text)
+#object_data = object_response.json()
+#print(json.dumps(object_data))
+
+for oid in object_id:
+    #print("*", oid)
+    OID_MET_URL = "https://collectionapi.metmuseum.org/public/collection/v1/objects/" + str(oid)
+    #print(OID_MET_URL)
+    object_response = requests.get(OID_MET_URL, headers=HEADERS, timeout=15)
+    if met_response.status_code != 200:
+        raise RuntimeError(f"OBJECT from MET API request failed: {object_response.status_code}")
+    #print(met_response.text)
+    object_data = object_response.json()
+    print(json.dumps(object_data))
+    with open("object_data.json", "w", encoding="utf-8") as file:
+        json.dump(object_data, file)
+
 
