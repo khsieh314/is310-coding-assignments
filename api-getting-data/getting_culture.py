@@ -24,6 +24,9 @@ if wiki_response.status_code != 200:
 wiki_data = wiki_response.json()
 print(json.dumps(wiki_data))
 
+with open("wiki_data.json", "w", encoding="utf-8") as file:
+    json.dump(wiki_data, file)
+
 
 
 MET_API_URL = "https://collectionapi.metmuseum.org/public/collection/v1.1/search"
@@ -39,4 +42,7 @@ if met_response.status_code != 200:
     raise RuntimeError(f"MET API request failed: {met_response.status_code}")
 met_data = met_response.json()
 print(json.dumps(met_data))
+
+with open("met_data.json", "w", encoding="utf-8") as file:
+    json.dump(met_data, file)
 
