@@ -13,20 +13,23 @@ HEADERS = {
 WIKI_API_URL = "https://en.wikipedia.org/w/api.php"
 wiki_params = {
     "action": "query",
-    "list": "search",
-    "srsearch": "Claude Monet",
+    "generator": "search",
+    "gsrsearch": "List of paintings by Claude Monet",
+    "gsrlimit": 10,
     "prop": "categories|images|info",
     "format": "json"
 }
+
 
 wiki_response = requests.get(WIKI_API_URL, params=wiki_params, headers=HEADERS, timeout=15)
 if wiki_response.status_code != 200:
     raise RuntimeError(f"WIKI API request failed: {wiki_response.status_code}")
 wiki_data = wiki_response.json()
 #print(json.dumps(wiki_data))
-print(wiki_data["query"]["pages"].values())
-"""for page in wiki_data:
-"""
+for page in wiki_data["query"]["pages"].values():
+    print(page["title"])
+    print(page.get("images", []))
+
 
 with open("wiki_data.json", "w", encoding="utf-8") as file:
     json.dump(wiki_data, file)
